@@ -1,0 +1,342 @@
+<h1>A window switcher, run dialog and dmenu replacement</h1>
+
+<p>A popup window switcher roughly based on <a href="http://code.google.com/p/superswitcher/">superswitcher</a>,
+requiring only xlib and pango. This version started off as a clone of simpleswitcher, the version from <a href="http://github.com/seanpringle/simpleswitcher">Sean
+Pringle</a>. All credit for this great tool should go to him.
+Rofi developed extra features, like a run-dialog, ssh-launcher and can act as a drop-in dmenu
+replacement, making it a very versatile tool.</p>
+
+<p>Using Rofi is a lot like dmenu, but extended for an improved work flow.
+It main features are:</p>
+
+<ul>
+<li>Full (configurable) keyboard navigation.</li>
+<li>Type to filter
+
+<ul>
+<li>Tokenized: Type any word in any order to filter.</li>
+<li>Case insensitive</li>
+</ul>
+</li>
+<li>UTF-8 enabled.
+
+<ul>
+<li>UTF-8 aware string collating.</li>
+<li>intl. keyboard support (`e -> è)</li>
+</ul>
+</li>
+<li>Pango font rendering.</li>
+<li>RTL language support.</li>
+<li>Window Switcher.
+
+<ul>
+<li>I3 support.</li>
+<li>EWMH compatible WM.</li>
+</ul>
+</li>
+<li>Run dialog.</li>
+<li>Desktop File Run dialog.</li>
+<li>SSH launcher.</li>
+<li>History based ordering last 25 choices are ordered on top based on use. (optional)</li>
+<li>Levenshtein distance ordering of matches. (optional)</li>
+<li>Drop in dmenu replacement.
+
+<ul>
+<li>With many added improvements.</li>
+</ul>
+</li>
+<li>Can be easily extended using scripts.</li>
+</ul>
+
+
+<p>The 4 Main functions of rofi are:</p>
+
+<h2>Window Switcher</h2>
+
+<p><img src="https://davedavenport.github.io/rofi/images/rofi/window-list.png" alt="Window List" /></p>
+
+<p>The window switcher shows the following informations in columns:</p>
+
+<ol>
+<li>Desktop number (optional, not shown in I3 mode)</li>
+<li>Window class.</li>
+<li>Window title.</li>
+</ol>
+
+
+<p>If compiled with I3 support, it should autodetect if I3 window manager is running and switch into
+I3 compatibility mode. This will disable Desktop numbers and hide the i3-bar, also it sends an IPC
+message to I3 to change focus.</p>
+
+<h2>Run dialog</h2>
+
+<p><img src="https://davedavenport.github.io/rofi/images/rofi/run-dialog.png" alt="run dialog" /></p>
+
+<p>The run dialog allows the user to quickly search and launch a program.
+It offers the following features:</p>
+
+<ul>
+<li>Shift-Return to run the selected program in a terminal.</li>
+<li>Favorites list, frequently used programs are sorted on top.</li>
+</ul>
+
+
+<p>There is also the drun mode, this behaves similar to run modi except it builds the list of applications based on desktop
+files found in the system.</p>
+
+<h2>SSH launcher</h2>
+
+<p><img src="https://davedavenport.github.io/rofi/images/rofi/ssh-dialog.png" alt="SSH Launcher" /></p>
+
+<p>Quickly ssh into remote machines</p>
+
+<ul>
+<li>Parses ~/.ssh/config to find hosts.</li>
+</ul>
+
+
+<h2>dmenu replacement</h2>
+
+<p><img src="https://davedavenport.github.io/rofi/images/rofi/dmenu-replacement.png" alt="DMENU replacement (running teiler)" /></p>
+
+<p>Drop in dmenu replacement. (Screenshot shows rofi used by
+<a href="https://github.com/carnager/teiler">teiler</a> ).</p>
+
+<p><strong>rofi</strong> features several improvements over dmenu to improve usability. There is the option to add
+an extra message bar (<code>-mesg</code>), pre-entering of text (<code>-filter</code>) or selecting entries based on a
+pattern (<code>-select</code>). Also highlighting (<code>-u</code> and <code>-a</code>) options and modi to force user to select one
+provided option (<code>-only-match</code>).</p>
+
+<h1>Usage</h1>
+
+<p>If used with <code>-show [mode]</code>, rofi will immediately open in the specified [mode]</p>
+
+<p>If used with <code>-dmenu</code>, rofi will use data from STDIN to let the user select an option.</p>
+
+<p>If use with neither of those options, rofi will launch in daemon-mode, waiting for a key (configured beforehand) to launch.</p>
+
+<h2>Single-shot</h2>
+
+<p>Show a run dialog with some font / color options:</p>
+
+<p>  <code>rofi -show run -font "snap 10" -fg "#505050" -bg "#000000" -hlfg "#ffb964" -hlbg "#000000" -o 85</code></p>
+
+<p>Show a ssh dialog:</p>
+
+<p>  <code>rofi -show ssh</code></p>
+
+<h2>dmenu</h2>
+
+<p>If passed the <code>-dmenu</code> option, or ran as <code>dmenu</code> (ie, /usr/bin/dmenu is symlinked to /usr/bin/rofi),
+rofi will use the data passed from STDIN.</p>
+
+<p><code>
+~/scripts/my_script.sh | rofi -dmenu
+echo -e "Option #1\nOption #2\nOption #3" | rofi -dmenu
+</code></p>
+
+<p>In both cases, rofi will output the user&rsquo;s selection to STDOUT.</p>
+
+<h2>Daemon mode</h2>
+
+<p>Let rofi sit in the background, waiting for the user to press <code>F12</code> to open the window run dialog:</p>
+
+<p><code>rofi -key-run F12</code></p>
+
+<h2>Switching Between Modi</h2>
+
+<p>Type <code>Shift-Right</code> to switch from Window list mode to Run mode and back.</p>
+
+<h2>Keybindings</h2>
+
+<table>
+<thead>
+<tr>
+<th style="text-align:left;"> Key                         </th>
+<th style="text-align:left;"> Action                                                             </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;"><code>Ctrl-v, Insert</code>             </td>
+<td style="text-align:left;"> Paste clipboard </td>
+</tr>
+<tr>
+<td style="text-align:left;"><code>Ctrl-Shift-v, Shift-Insert</code> </td>
+<td style="text-align:left;"> Paste primary selection </td>
+</tr>
+<tr>
+<td style="text-align:left;"><code>Ctrl-u</code>                     </td>
+<td style="text-align:left;"> Clear the line </td>
+</tr>
+<tr>
+<td style="text-align:left;"><code>Ctrl-a</code>                     </td>
+<td style="text-align:left;"> Beginning of line </td>
+</tr>
+<tr>
+<td style="text-align:left;"><code>Ctrl-e</code>                     </td>
+<td style="text-align:left;"> End of line </td>
+</tr>
+<tr>
+<td style="text-align:left;"><code>Ctrl-f, Right</code>              </td>
+<td style="text-align:left;"> Forward one character </td>
+</tr>
+<tr>
+<td style="text-align:left;"><code>Alt-f</code>                      </td>
+<td style="text-align:left;"> Forward one word </td>
+</tr>
+<tr>
+<td style="text-align:left;"><code>Ctrl-b, Left</code>               </td>
+<td style="text-align:left;"> Back one character </td>
+</tr>
+<tr>
+<td style="text-align:left;"><code>Alt-b</code>                      </td>
+<td style="text-align:left;"> Back one word </td>
+</tr>
+<tr>
+<td style="text-align:left;"><code>Ctrl-d, Delete</code>             </td>
+<td style="text-align:left;"> Delete character </td>
+</tr>
+<tr>
+<td style="text-align:left;"><code>Ctrl-Alt-d</code>                 </td>
+<td style="text-align:left;"> Delete word </td>
+</tr>
+<tr>
+<td style="text-align:left;"><code>Ctrl-h, Backspace</code>          </td>
+<td style="text-align:left;"> Backspace (delete previous character) </td>
+</tr>
+<tr>
+<td style="text-align:left;"><code>Ctrl-Alt-h</code>                 </td>
+<td style="text-align:left;"> Delete previous word </td>
+</tr>
+<tr>
+<td style="text-align:left;"><code>Ctrl-j,Ctrl-m,Enter</code>        </td>
+<td style="text-align:left;"> Accept entry </td>
+</tr>
+<tr>
+<td style="text-align:left;"><code>Ctrl-n,Down</code>                </td>
+<td style="text-align:left;"> Select next entry </td>
+</tr>
+<tr>
+<td style="text-align:left;"><code>Ctrl-p,Up</code>                  </td>
+<td style="text-align:left;"> Select previous entry </td>
+</tr>
+<tr>
+<td style="text-align:left;"><code>Page Up</code>                    </td>
+<td style="text-align:left;"> Go to the previous page </td>
+</tr>
+<tr>
+<td style="text-align:left;"><code>Page Down</code>                  </td>
+<td style="text-align:left;"> Go to the next page </td>
+</tr>
+<tr>
+<td style="text-align:left;"><code>Ctrl-Page Up</code>               </td>
+<td style="text-align:left;"> Go to the previous column </td>
+</tr>
+<tr>
+<td style="text-align:left;"><code>Ctrl-Page Down</code>             </td>
+<td style="text-align:left;"> Go to the next column </td>
+</tr>
+<tr>
+<td style="text-align:left;"><code>Ctrl-Enter</code>                 </td>
+<td style="text-align:left;"> Use entered text as command (in ssh/run modi) </td>
+</tr>
+<tr>
+<td style="text-align:left;"><code>Shift-Enter</code>                </td>
+<td style="text-align:left;"> Launch the application in a terminal (in run mode) </td>
+</tr>
+<tr>
+<td style="text-align:left;"><code>Shift-Enter</code>                </td>
+<td style="text-align:left;"> Return the selected entry and move to the next item while keeping Rofi open. (in dmenu) </td>
+</tr>
+<tr>
+<td style="text-align:left;"><code>Shift-Right</code>                </td>
+<td style="text-align:left;"> Switch to the next modi. The list can be customized with the -switchers argument. </td>
+</tr>
+<tr>
+<td style="text-align:left;"><code>Shift-Left</code>                 </td>
+<td style="text-align:left;"> Switch to the previous modi. The list can be customized with the -switchers argument. </td>
+</tr>
+<tr>
+<td style="text-align:left;"><code>Ctrl-Tab</code>                   </td>
+<td style="text-align:left;"> Switch to the next modi. The list can be customized with the -switchers argument. </td>
+</tr>
+<tr>
+<td style="text-align:left;"><code>Ctrl-Shift-Tab</code>             </td>
+<td style="text-align:left;"> Switch to the previous modi. The list can be customized with the -switchers argument. </td>
+</tr>
+<tr>
+<td style="text-align:left;"><code>Ctrl-space</code>                 </td>
+<td style="text-align:left;"> Set selected item as input text. </td>
+</tr>
+<tr>
+<td style="text-align:left;"><code>Shift-Del</code>                  </td>
+<td style="text-align:left;"> Delete entry from history. </td>
+</tr>
+<tr>
+<td style="text-align:left;"><code>grave</code>                      </td>
+<td style="text-align:left;"> Toggle case sensitivity. </td>
+</tr>
+<tr>
+<td style="text-align:left;"><code>Alt-grave</code>                  </td>
+<td style="text-align:left;"> Toggle levenshtein  sort. </td>
+</tr>
+<tr>
+<td style="text-align:left;"><code>Alt-Shift-S</code>                </td>
+<td style="text-align:left;"> Take a screenshot and store this in the Pictures directory. </td>
+</tr>
+</tbody>
+</table>
+
+
+<h1>Configuration</h1>
+
+<p>There are currently three methods of setting configuration options:</p>
+
+<ul>
+<li>Compile time: edit config.c. This method is strongly discouraged.</li>
+<li>Xresources: A method of storing key values in the Xserver. See
+<a href="https://en.wikipedia.org/wiki/X_resources">here</a> for more information.
+This is the recommended way of configuring <strong>rofi</strong>. Remember to load your changes with <code>xrdb -load ~/.Xresources</code></li>
+<li>Commandline options: Arguments passed to <strong>rofi</strong>.</li>
+</ul>
+
+
+<p>The Xresources options and the commandline options are aliased. So to set option X you would set:</p>
+
+<p><code>rofi.X: value</code></p>
+
+<p>In the Xresources file, and to (override) this via the commandline you would pass the same key
+prefixed with a &lsquo;-&rsquo;:</p>
+
+<pre><code>rofi -X value
+</code></pre>
+
+<p>To get a list of available options, formatted as Xresources entries run:</p>
+
+<pre><code>rofi -dump-Xresources
+</code></pre>
+
+<p>The configuration system supports the following types:</p>
+
+<ul>
+<li>String</li>
+<li>Integer (signed and unsigned)</li>
+<li>Char</li>
+<li>Boolean</li>
+</ul>
+
+
+<p>The boolean option has a non-default commandline syntax, to enable option X  you do:</p>
+
+<pre><code>rofi -X
+</code></pre>
+
+<p>to disable it:</p>
+
+<pre><code>rofi -no-X
+</code></pre>
+
+<h1>Installation</h1>
+
+<p>Please see the <a href="https://davedavenport.github.io/rofi/p08-INSTALL.html">installation guide</a> for instruction on how to install <em>rofi</em>.</p>
